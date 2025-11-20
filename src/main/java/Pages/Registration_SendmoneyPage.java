@@ -1,6 +1,5 @@
 package Pages;
 
-import java.awt.Desktop.Action;
 import java.time.Duration;
 
 import org.openqa.selenium.Keys;
@@ -11,6 +10,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import utility.RandomDataUtil;
 
 public class Registration_SendmoneyPage {
 
@@ -37,28 +38,33 @@ public class Registration_SendmoneyPage {
     @FindBy(xpath = "//input[@class='form-check-input']")
     WebElement countryCheckbox;
 
-    @FindBy(xpath = "//div[text()='Select Collection Type *']")
+    @FindBy(xpath = "//input[contains(@id,'react-select-') and @type='text']")
     WebElement collectionTypeDropdown;
 
     @FindBy(xpath = "(//div[contains(@class,'option')])[1]")
     WebElement firstDropdownOption;
 
-    @FindBy(xpath = "//div[text()='Male']")
+    
+    @FindBy(xpath = "//input[contains(@placeholder,'Your mobile number')]") WebElement mobile;
+    
+    @FindBy(xpath="//input[@placeholder='Recipient Name ']")
+    WebElement recipientName;
+    @FindBy(xpath = "//input[@id='react-select-3-input' and @role='combobox']")WebElement clickGender;
+    @FindBy(xpath = "//div[@role='option' and contains(text(),'Male')]")
     WebElement genderMaleOption;
 
-    @FindBy(xpath="//button[text()='Select Bank *']")
+    @FindBy(xpath="//button[normalize-space(text())='Select Bank *']")
     WebElement selectBankBtn;
 
     @FindBy(xpath="//span[text()='AB Bank Ltd.']")
     WebElement bankAB;
 
-    @FindBy(xpath="//input[@placeholder='Recipient Name ']")
-    WebElement recipientName;
+  
 
-    @FindBy(xpath="//input[@placeholder='Enter  Account No.  *']")
+    @FindBy(xpath="//input[contains(@placeholder,'Enter') and contains(@placeholder,'Account No')]")
     WebElement accountNo;
 
-    @FindBy(xpath="//input[@placeholder='Enter Confirm  Account No.  ']")
+    @FindBy(xpath="//input[contains(@placeholder,'Confirm') and contains(@placeholder,'Account No')]")
     WebElement confirmAccountNo;
 
     @FindBy(xpath="//input[@placeholder='Enter Account Holder Name  *']")
@@ -72,11 +78,31 @@ public class Registration_SendmoneyPage {
 
     @FindBy(xpath="//input[@placeholder='Enter Branch Code *']")
     WebElement branchCode;
+    
+    @FindBy(xpath ="//button[@type='button' and normalize-space()='Submit']")WebElement submitbtn;
 
 
     // ----------- MAIN METHOD ---------- //
 
     public void fillRecipientRegistration() throws InterruptedException {
+    	
+    	   // 🔹 Random Data Variables
+    	String randomfirstName=RandomDataUtil.getRandomFirstName();
+        String randomFullName = RandomDataUtil.getRandomFullName();
+        String randomMobile   = RandomDataUtil.getRandomMobile();
+        String randomAccNo    = RandomDataUtil.getRandomAccountNumber();
+        String randomIFSC     = RandomDataUtil.getRandomIFSC();
+        String randomBranch   = RandomDataUtil.getRandomCity();
+        
+
+        System.out.println("------ RANDOM TEST DATA -------");
+        System.out.println("Full Name: " + randomFullName);
+        System.out.println("Mobile: " + randomMobile);
+        System.out.println("Account No: " + randomAccNo);
+        System.out.println("IFSC: " + randomIFSC);
+        
+        System.out.println("Branch Code: " + randomBranch);
+        System.out.println("--------------------------------");
 
         wait.until(ExpectedConditions.elementToBeClickable(recipientMenu)).click();
         wait.until(ExpectedConditions.elementToBeClickable(addNewRecipientBtn)).click();
@@ -84,7 +110,7 @@ public class Registration_SendmoneyPage {
         wait.until(ExpectedConditions.visibilityOf(searchCountryField)).sendKeys("india");
         wait.until(ExpectedConditions.elementToBeClickable(countryCheckbox)).click();
    Thread.sleep(2000);
-   collectionTypeDropdown.clear();
+  
    
         wait.until(ExpectedConditions.visibilityOf(collectionTypeDropdown)).sendKeys("Bank Deposit");
         Actions actions = new Actions(driver);
@@ -93,19 +119,28 @@ public class Registration_SendmoneyPage {
                .sendKeys(Keys.ENTER)
                .build()
                .perform();
-        wait.until(ExpectedConditions.elementToBeClickable(firstDropdownOption)).click();
+      //  wait.until(ExpectedConditions.elementToBeClickable(firstDropdownOption)).click();
         
+        wait.until(ExpectedConditions.visibilityOf(mobile)).sendKeys(randomMobile);
+        recipientName.sendKeys(randomfirstName);
+        
+        clickGender.click();
         wait.until(ExpectedConditions.elementToBeClickable(genderMaleOption)).click();
 
-      //  wait.until(ExpectedConditions.elementToBeClickable(firstDropdownOption)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(selectBankBtn)).click();
         wait.until(ExpectedConditions.elementToBeClickable(bankAB)).click();
 
-        recipientName.sendKeys("John Doe");
-        accountNo.sendKeys("123456789012");
-        confirmAccountNo.sendKeys("123456789012");
-        accountHolderName.sendKeys("John Doe");
-        ifscCode.sendKeys("ABCD0123456");
-        branchName.sendKeys("Mumbai");
-        branchCode.sendKeys("0045");
+      Thread.sleep(2000);
+        accountNo.sendKeys(randomAccNo);
+        confirmAccountNo.sendKeys(randomAccNo);
+        accountHolderName.sendKeys(randomFullName);
+        ifscCode.sendKeys(randomIFSC);
+        branchName.sendKeys(randomBranch);
+        branchCode.sendKeys("1234");
+        Actions act = new Actions(driver);
+        act.moveToElement(submitbtn).click().perform();
+
+        
+
     }
 }

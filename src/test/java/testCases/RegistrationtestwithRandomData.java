@@ -8,7 +8,7 @@ import Pages.Loginpage;
 import Pages.Registration_SendmoneyPage;
 import baseClass.BaseClass;
 
-public class Registrationtest extends BaseClass {
+public class RegistrationtestwithRandomData extends BaseClass {
 
     @Test(description = "Login to Calyx and verify logged-in user")
     public void test1() throws InterruptedException {
